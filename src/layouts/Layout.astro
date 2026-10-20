@@ -53,9 +53,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 </head>
 <body>
   <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+  <button class="lang-toggle" id="lang-toggle" aria-label="Cambiar idioma / Change language" data-lang="es">EN</button>
   <main id="main-content">
       <slot />
     </main>
+  <script>
+    const langToggle = document.getElementById('lang-toggle');
+    if (langToggle) {
+      langToggle.addEventListener('click', () => {
+        const current = document.documentElement.getAttribute('lang') || 'es';
+        const next = current === 'es' ? 'en' : 'es';
+        document.documentElement.setAttribute('lang', next);
+        document.documentElement.setAttribute('data-lang', next);
+        langToggle.setAttribute('data-lang', next);
+        langToggle.textContent = next === 'es' ? 'EN' : 'ES';
+        langToggle.setAttribute('aria-label', next === 'es' ? 'Cambiar a inglés' : 'Cambiar a español');
+        try { localStorage.setItem('raices-lang', next); } catch (e) {}
+      });
+      try {
+        const saved = localStorage.getItem('raices-lang');
+        if (saved === 'en') {
+          document.documentElement.setAttribute('lang', 'en');
+          document.documentElement.setAttribute('data-lang', 'en');
+          langToggle.setAttribute('data-lang', 'en');
+          langToggle.textContent = 'ES';
+        }
+      } catch (e) {}
+    }
+  </script>
 </body>
 </html>
 
@@ -93,6 +118,29 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       scroll-behavior: auto !important;
     }
   }
+
+  /* ===== LANGUAGE TOGGLE ===== */
+  .lang-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10001;
+    background: var(--purple);
+    color: #fff;
+    border: 1px solid var(--purple-light);
+    border-radius: 50px;
+    padding: 0.4rem 1rem;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .lang-toggle:hover {
+    background: var(--purple-light);
+  }
+  /* Hide Spanish-only text in English mode, and vice versa */
+  html[data-lang="en"] [lang="es"] { display: none !important; }
+  html[data-lang="es"] [lang="en"] { display: none !important; }
 
   /* ===== RESET & BASE ===== */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }

@@ -1,0 +1,11 @@
+# Raices Digitales - robots.txt
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://raicesdigitales.cc3po.com/sitemap.xml
+
+# Content Signals (EU Directive 2019/790)
+# search: yes (search engines may index)
+# ai-input: no (do not use for AI-generated search answers)
+# ai-train: no (do not use for AI model training)
